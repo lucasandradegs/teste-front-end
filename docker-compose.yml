@@ -5,3 +5,13 @@ services:
     build: ./mf_drawer/mf_drawer_backend
     ports:
       - "3001:3001"
+
+
+  mf_drawer_frontend:
+    build: ./mf_drawer/mf_drawer_frontend
+    ports:
+      - "8080:80"
+    volumes:
+      - ./mf_drawer/mf_drawer_frontend:/app
+    depends_on:
+      - mf_drawer_backend

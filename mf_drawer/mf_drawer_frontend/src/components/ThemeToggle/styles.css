@@ -1,0 +1,45 @@
+.theme-toggle {
+    position: relative;
+    width: 100px;
+    height: 50px;
+    background-color: #F6F6F7;
+    border-radius: 5rem;
+    padding: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .theme-toggle .toggle-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    background-color: var(--bg-color);
+    padding: 3px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .theme-toggle .moon, .theme-toggle .sun {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+  }
+  
+  .theme-toggle .moon {
+    background-color: #3C3C47;
+  }
+  
+  .theme-toggle .sun {
+    background-color: yellow;
+    margin-left: auto;
+  }
+  
+  .dark-mode {
+    --bg-color: #1a202c;
+  }
+  
+  .light-mode {
+    --bg-color: #F6F6F7;
+  }

@@ -1,0 +1,31 @@
+{
+  "name": "mf_drawer_frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "webpack serve --mode production --config webpack.config.cjs",
+    "build": "webpack --mode production --config webpack.config.cjs",
+    "dev": "webpack serve --mode development --config webpack.config.cjs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
+    "css-loader": "^7.1.2",
+    "mini-css-extract-plugin": "^2.9.0",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.5.2",
+    "webpack": "^5.92.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.0.4",
+    "webpack-node-externals": "^3.0.0"
+  },
+  "dependencies": {
+    "js-cookie": "^3.0.5"
+  }
+}
