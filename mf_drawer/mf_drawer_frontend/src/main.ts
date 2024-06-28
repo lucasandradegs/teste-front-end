@@ -1,20 +1,28 @@
-import './styles/css/styles.css';
-import { createHeader } from './components/Header';
-import { createSidebar } from './components/SideBar';
+import "./styles/globals.css"
 import { createThemeToggle } from './components/ThemeToggle';
+import { createSideMenu } from './components/SideMenu';
 
 function initApp() {
-    const root = document.getElementById('root');
+    const root = document.getElementById('headerMobile');
     if (root) {
-        const header = createHeader();
-        const sidebar = createSidebar();
+        const headerFirstSection = root.querySelector('.headerFirstSection');
+        const sideMenu = createSideMenu();
         const themeToggle = createThemeToggle();
-        
-        root.appendChild(header);
-        root.appendChild(sidebar);
+
+        if (headerFirstSection) {
+            root.insertBefore(sideMenu, headerFirstSection);
+        }
+
         root.appendChild(themeToggle);
     } else {
         console.error('Root element not found');
+    }
+    const rootDesktop = document.getElementById('titleAndTheme');
+
+    if (rootDesktop) {
+        const themeToggle = createThemeToggle();
+
+        rootDesktop.appendChild(themeToggle)
     }
 }
 

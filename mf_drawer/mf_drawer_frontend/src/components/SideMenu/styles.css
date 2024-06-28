@@ -1,0 +1,72 @@
+.sideMenu {
+  position: relative;
+  width: 2rem;
+  height: 2rem;
+  cursor: pointer;
+  transition: background-color 1.2s ease;
+}
+
+.toggleMenu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-image: url('../../../public/images/menuOpenDark.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  border: none;
+  background-color: transparent;
+  transition: background-image 0.4s ease;
+}
+
+.dark-mode .toggleMenu {
+  background-image: url('../../../public/images/menuOpen.svg');
+}
+
+.sideMenuContent {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 25rem;
+  height: 100%;
+  background-color: #4f4f4f;
+  color: white;
+  overflow-y: auto;
+  z-index: 1000;
+  padding: 4rem 2rem;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+
+  border-radius: 0 20px 20px 0;
+}
+
+.closeMenu {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  width: 2rem;
+  height: 2rem;
+  background-image: url('../../../public/images/menuClose.svg');
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.sideMenuContent ul li {
+  list-style: none;
+  padding: 1rem;
+  border-bottom: 1px solid #b7b6b6;
+}
+
+.sideMenuContent ul li a {
+  color: white;
+  text-decoration: none;
+}
+
+.sideMenuContent a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
