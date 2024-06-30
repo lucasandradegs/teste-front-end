@@ -1,0 +1,142 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  font-size: 62.5%;
+  --bg-color: #F6F6F7;
+  --text-color: #161616;
+}
+
+
+a:focus-visible,
+button:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #387ac0;
+  outline-offset: 2px;
+}
+
+
+body {
+  padding: 3rem 2.4rem;
+  margin-left: auto;
+  margin-right: auto;
+
+  background-color: var(--bg-color);
+  color: var(--text-color);
+
+  -webkit-font-smoothing: antialiased;
+}
+
+body,
+input,
+button {
+  font-family: 'Poppins', serif;
+  font-size: 1.6rem;
+  outline: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+button,
+a {
+  cursor: pointer;
+  transition: filter 0.2s;
+}
+
+button:hover,
+a:hover {
+  filter: brightness(0.7);
+}
+
+body.dark-mode {
+  --bg-color: #161616;
+  --text-color: #f5f5f5;
+}
+
+.searchAndResult {
+  text-align: center;
+
+  .searchForm {
+    box-shadow: 0 12px 32px rgba(0, 0, 0, .1), 0 2px 6px rgba(0, 0, 0, .08);
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 3px;
+    border-radius: 999999px;
+    background-color: var(--bg-color);
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 1.2rem;
+    padding-bottom: 1.2rem;
+
+    >input {
+      flex: 1 1 0%;
+      background-color: transparent;
+      outline: 2px solid transparent;
+      outline-offset: 2px;
+      border: none;
+      color: var(--text-color);
+    }
+  }
+}
+
+.searchResult {
+  margin-top: 4rem;
+
+  .videoContainer {
+
+    position: relative;
+
+    margin-bottom: 4rem;
+
+    >img {
+      width: 30rem;
+      height: 21rem;
+      border-radius: 3.5rem;
+
+      @media (max-width: 374px) {
+        width: 26rem;
+      }
+    }
+
+    h4 {
+      font-size: 1.4rem;
+    }
+
+    .videoPlayButton {
+      position: absolute;
+      height: 16rem;
+      padding-top: 5rem;
+
+      cursor: pointer;
+    }
+  }
+}
+
+body.responsiveResult {
+  padding: 3rem 0;
+
+  .searchAndResult {
+
+    .searchForm {
+      width: 25rem;
+    }
+
+    .searchResult {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 4rem;
+      margin-right: 4rem;
+
+      @media (min-width: 953px) {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+  }
+}
