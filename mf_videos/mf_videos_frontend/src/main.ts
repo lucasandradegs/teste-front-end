@@ -1,6 +1,28 @@
 import "./styles/globals.css"
+import { createThemeToggle } from './components/ThemeToggle';
+import { createSideMenu } from './components/SideMenu';
 
-function initApp() {}
+function initApp() {
+    const root = document.getElementById('headerMobile');
+    if (root) {
+        const headerFirstSection = root.querySelector('.headerFirstSection');
+        const sideMenu = createSideMenu();
+        const themeToggle = createThemeToggle();
+
+        if (headerFirstSection) {
+            root.insertBefore(sideMenu, headerFirstSection);
+        }
+
+        root.appendChild(themeToggle);
+    }
+    const rootDesktop = document.getElementById('titleAndTheme');
+
+    if (rootDesktop) {
+        const themeToggle = createThemeToggle();
+
+        rootDesktop.appendChild(themeToggle)
+    }
+}
 
 window.addEventListener('message', (event) => {
     if (event.data.type === 'theme-change') {
