@@ -54,4 +54,39 @@ window.addEventListener('message', (event) => {
   }
 });
 
+window.addEventListener('message', async (event) => {
+  if (event.data.type === 'updateFavorites') {
+    const count = await fetchFavoritesCount();
+    updateFavoritesCount(count);
+  }
+});
+
+async function fetchFavoritesCount(): Promise<number> {
+  const response = await fetch('http://localhost:3000/api/favorites/count');
+  const data = await response.json();
+  return data.count;
+}
+
+function updateFavoritesCount(count: number) {
+  const favoritesLink = document.querySelector('#linkToFavorites') as HTMLElement;
+  favoritesLink.textContent = `Favoritos (${count})`;
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const count = await fetchFavoritesCount();
+  updateFavoritesCount(count);
+
+  window.addEventListener('message', async (event) => {
+    if (event.data.type === 'UPDATE_FAVORITES_COUNT') {
+      const newCount = await fetchFavoritesCount();
+      updateFavoritesCount(newCount);
+    }
+  });
+});
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const count = await fetchFavoritesCount();
+  updateFavoritesCount(count);
+});
+
 document.addEventListener('DOMContentLoaded', initApp);

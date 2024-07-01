@@ -26,14 +26,33 @@ function createVideoElement(video: any): HTMLElement {
   startFavorite.src = 'images/star.svg';
   startFavorite.alt = 'Imagem de uma estrela representando vídeo marcado como favorito';
 
-  let isVideoFavorite = true;
-  startFavorite.addEventListener('click', () => {
-    if (isVideoFavorite) {
-      startFavorite.src = 'images/filledStar.svg';
-    } else {
-      startFavorite.src = 'images/star.svg';
+  let isVideoFavorite = false;
+  startFavorite.addEventListener('click', async (event) => {
+    event.preventDefault();
+  
+    const videoData = {
+      id: { videoId: video.id.videoId },
+      snippet: {
+        title: video.snippet.title,
+        thumbnails: {
+          default: { url: video.snippet.thumbnails.default.url }
+        }
+      }
+    };
+  
+    try {
+      if (isVideoFavorite) {
+        startFavorite.src = 'images/star.svg';
+        await removeFavorite(video.id.videoId);
+      } else {
+        startFavorite.src = 'images/filledStar.svg';
+        await addFavorite(videoData);
+      }
+  
+      isVideoFavorite = !isVideoFavorite;
+    } catch (error) {
+      console.error('Error updating favorites:', error);
     }
-    isVideoFavorite = !isVideoFavorite;
   });
 
   infoContainer.appendChild(title);
@@ -64,6 +83,41 @@ function createVideoElement(video: any): HTMLElement {
   });
 
   return videoContainer;
+}
+
+async function addFavorite(video: any) {
+  const videoData = {
+    id: { videoId: video.id.videoId },
+    snippet: {
+      title: video.snippet.title,
+      thumbnails: {
+        default: { url: video.snippet.thumbnails.default.url }
+      }
+    }
+  };
+
+  try {
+    const response = await fetch('http://localhost:3000/api/favorites', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(videoData)
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to add video to favorites');
+    }
+  } catch (error) {
+    console.error('Error adding video to favorites:', error);
+  }
+}
+
+async function removeFavorite(videoId: string) {
+  await fetch(`http://localhost:3000/api/favorites/${videoId}`, {
+    method: 'DELETE'
+  });
+  window.parent.postMessage({ type: 'UPDATE_FAVORITES_COUNT' }, '*');
 }
 
 
@@ -125,6 +179,41 @@ function initApp() {
       }
     });
   }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const favoritesContainer = document.getElementById('favoritesContainer');
+
+  if (!favoritesContainer) return;
+
+  try {
+    const response = await fetch('http://localhost:3000/api/favorites');
+    const favoriteVideos = await response.json();
+
+    favoriteVideos.forEach((video: any) => {
+      const videoElement = createFavSection(video);
+      favoritesContainer.appendChild(videoElement);
+    });
+  } catch (error) {
+    console.error('Failed to fetch favorite videos', error);
+  }
+});
+
+function createFavSection(video: any): HTMLElement {
+  const videoContainer = document.createElement('div');
+  videoContainer.className = 'videoContainer';
+
+  const thumbnail = document.createElement('img');
+  thumbnail.src = video.thumbnail;
+  thumbnail.alt = 'Imagem de Thumbnail do vídeo';
+
+  const title = document.createElement('h4');
+  title.textContent = video.title;
+
+  videoContainer.appendChild(thumbnail);
+  videoContainer.appendChild(title);
+
+  return videoContainer;
 }
 
 document.addEventListener('DOMContentLoaded', initApp);
