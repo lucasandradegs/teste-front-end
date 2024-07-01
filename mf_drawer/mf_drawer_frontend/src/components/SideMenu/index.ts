@@ -24,13 +24,14 @@ export function createSideMenu(): HTMLElement {
 
   const sideMenuItems = document.createElement('ul');
 
-  const createSideMenuItem = (text: string, href: string, iconSrc: string, iconAlt: string) => {
+  const createSideMenuItem = (text: string, href: string, iconSrc: string, iconAlt: string, navigateTo: string, id: string) => {
     const sideItem = document.createElement('li');
 
     const sideItemLink = document.createElement('a');
     sideItemLink.href = href;
     sideItemLink.textContent = text;
-    sideItemLink.tabIndex = 0; 
+    sideItemLink.tabIndex = 0;
+    sideItemLink.id = id;
 
     const sideItemIcon = document.createElement('img');
     sideItemIcon.src = iconSrc;
@@ -40,11 +41,19 @@ export function createSideMenu(): HTMLElement {
     sideItemLink.appendChild(sideItemIcon);
     sideItem.appendChild(sideItemLink);
 
+    sideItemLink.addEventListener('click', (event) => {
+      event.preventDefault();
+      if (window.top) {
+        window.top.postMessage({ type: 'navigate', data: { target: navigateTo } }, '*');
+      }
+      toggleSideMenu();
+    });
+
     return sideItem;
   };
 
-  sideMenuItems.appendChild(createSideMenuItem('Vídeos', '#', 'images/logo.svg', 'Ícone de um reprodutor de vídeo'));
-  sideMenuItems.appendChild(createSideMenuItem('Favoritos', '#', 'images/favorites.svg', 'Ícone de uma estrela representando os seus vídeos favoritos'));
+  sideMenuItems.appendChild(createSideMenuItem('Vídeos', '#', 'images/logo.svg', 'Ícone de um reprodutor de vídeo', 'videos', 'linkToVideosMobile'));
+  sideMenuItems.appendChild(createSideMenuItem('Favoritos', '#', 'images/favorites.svg', 'Ícone de uma estrela representando os seus vídeos favoritos', 'favorites', 'linkToFavoritesMobile'));
 
   sideMenuContent.appendChild(sideMenuItems);
 

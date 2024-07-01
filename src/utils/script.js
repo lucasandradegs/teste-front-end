@@ -41,7 +41,7 @@ document.getElementById('theme-toggle').appendChild(createThemeToggle());
 
 function handleResizeLayout() {
   const drawerIframe = document.getElementById('mf_drawer');
-  const videoIframe = document.getElementById('mf_videos')
+  const videoIframe = document.getElementById('mf_videos');
 
   if (drawerIframe && videoIframe) {
     const message = {
@@ -52,7 +52,6 @@ function handleResizeLayout() {
     videoIframe.contentWindow.postMessage(message, '*');
   }
 }
-
 
 function handleMessage(event) {
   if (event.data.type === 'toggle-menu') {
@@ -68,7 +67,19 @@ function handleMessage(event) {
 }
 
 window.addEventListener('load', handleResizeLayout);
-
 window.addEventListener('resize', handleResizeLayout);
-
 window.addEventListener('message', handleMessage);
+
+window.addEventListener('message', (event) => {
+  if (event.data.type === 'navigate') {
+    const target = event.data.data.target;
+    const mfVideos = document.getElementById('mf_videos');
+    if (mfVideos) {
+      if (target === 'videos') {
+        mfVideos.src = "http://localhost:8082/index.html";
+      } else if (target === 'favorites') {
+        mfVideos.src = "http://localhost:8082/favorites.html";
+      }
+    }
+  }
+});

@@ -1,3 +1,4 @@
+version: '3'
 services:
   mf_drawer_backend:
     build: ./mf_drawer/mf_drawer_backend

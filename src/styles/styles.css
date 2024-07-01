@@ -11,7 +11,7 @@
 }
 
 html.menu-open {
-
+  overflow-y: hidden;
   iframe#mf_drawer {
     z-index: 20;
   }
