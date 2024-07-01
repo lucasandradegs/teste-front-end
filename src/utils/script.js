@@ -24,7 +24,7 @@ function toggleTheme() {
     root.classList.add('dark-mode');
     sendThemeToIframe('dark');
   } else {
-    root.classList.remove('dark-mode');
+    root.classList.remove('light-mode');
     root.classList.add('light-mode');
     sendThemeToIframe('light');
   }
@@ -63,12 +63,33 @@ function handleMessage(event) {
     } else {
       root.classList.remove('menu-open');
     }
+  } else if (event.data.type === 'request-theme') {
+    const root = document.documentElement;
+    const theme = root.classList.contains('light-mode') ? 'light' : 'dark';
+    event.source.postMessage({ type: 'theme-change', theme }, '*');
   }
+}
+
+function handleIframeLoad(event) {
+  const iframe = event.target;
+  const message = {
+    type: 'resize',
+    width: window.innerWidth
+  };
+  iframe.contentWindow.postMessage(message, '*');
+
+  // Send current theme to the iframe
+  const root = document.documentElement;
+  const theme = root.classList.contains('light-mode') ? 'light' : 'dark';
+  iframe.contentWindow.postMessage({ type: 'theme-change', theme }, '*');
 }
 
 window.addEventListener('load', handleResizeLayout);
 window.addEventListener('resize', handleResizeLayout);
 window.addEventListener('message', handleMessage);
+
+document.getElementById('mf_drawer').addEventListener('load', handleIframeLoad);
+document.getElementById('mf_videos').addEventListener('load', handleIframeLoad);
 
 window.addEventListener('message', (event) => {
   if (event.data.type === 'navigate') {
@@ -76,8 +97,10 @@ window.addEventListener('message', (event) => {
     const mfVideos = document.getElementById('mf_videos');
     if (mfVideos) {
       if (target === 'videos') {
+        // mfVideos.src = "http://localhost:3002/index.html";
         mfVideos.src = "http://localhost:8082/index.html";
       } else if (target === 'favorites') {
+        // mfVideos.src = "http://localhost:3002/favorites.html";
         mfVideos.src = "http://localhost:8082/favorites.html";
       }
     }
