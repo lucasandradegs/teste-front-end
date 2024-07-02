@@ -1,4 +1,5 @@
 import { createVideoElement } from "../../components/VideoSearchResult";
+import { FavoritesVideos } from "../interfaces";
 import { getCookie, saveToCookie } from "../saveOnCookies";
 
 let isLightMode = true;
@@ -176,4 +177,19 @@ export function renderVideos(videos: any[]): void {
         const videoElement = createVideoElement(video);
         searchResult.appendChild(videoElement);
     });
+}
+
+// Função para retornar os vídeos marcados como favoritados com a estrela preenchida 
+
+export async function fetchFavoriteVideos(): Promise<FavoritesVideos[]> {
+    try {
+        const response = await fetch('http://localhost:3000/api/favorites');
+        if (!response.ok) {
+            throw new Error('Failed to fetch favorite videos');
+        }
+        return response.json();
+    } catch (error) {
+        console.error('Error fetching favorite videos:', error);
+        return [];
+    }
 }

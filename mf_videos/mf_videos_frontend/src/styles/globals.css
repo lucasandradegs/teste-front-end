@@ -131,8 +131,10 @@ a:hover {
 
     .videoPlayButton {
       position: absolute;
-      height: 16rem;
-      padding-top: 5rem;
+      height: 21rem;
+      padding-top: 6rem;
+      padding-bottom: 6rem;
+
 
       cursor: pointer;
     }

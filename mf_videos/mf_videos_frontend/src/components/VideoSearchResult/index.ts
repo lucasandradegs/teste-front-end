@@ -1,4 +1,4 @@
-import { addFavorite, removeFavorite } from "../../utils/functions";
+import { addFavorite, fetchFavoriteVideos, removeFavorite } from "../../utils/functions";
 import { Video } from "../../utils/interfaces";
 
 export function createVideoElement(video: Video): HTMLElement {
@@ -37,33 +37,34 @@ export function createVideoElement(video: Video): HTMLElement {
     starFavorite.tabIndex = 0;
   
     let isVideoFavorite = false;
+  
     starFavorite.addEventListener('click', async (event) => {  
-      event.preventDefault();
-      event.stopPropagation();
-  
-      const videoData = {
-        id: { videoId: video.id.videoId },
-        snippet: {
-          title: video.snippet.title,
-          thumbnails: {
-            default: { url: video.snippet.thumbnails.default.url }
-          }
+        event.preventDefault();
+        event.stopPropagation();
+    
+        const videoData = {
+            id: { videoId: video.id.videoId },
+            snippet: {
+                title: video.snippet.title,
+                thumbnails: {
+                    default: { url: video.snippet.thumbnails.default.url }
+                }
+            }
+        };
+    
+        try {
+            if (isVideoFavorite) {
+                starFavorite.src = 'images/star.svg';
+                await removeFavorite(video.id.videoId);
+            } else {
+                starFavorite.src = 'images/filledStar.svg';
+                await addFavorite(videoData);
+            }
+    
+            isVideoFavorite = !isVideoFavorite;
+        } catch (error) {
+            console.error('Error updating favorites:', error);
         }
-      };
-  
-      try {
-        if (isVideoFavorite) {
-          starFavorite.src = 'images/star.svg';
-          await removeFavorite(video.id.videoId);
-        } else {
-          starFavorite.src = 'images/filledStar.svg';
-          await addFavorite(videoData);
-        }
-  
-        isVideoFavorite = !isVideoFavorite;
-      } catch (error) {
-        console.error('Error updating favorites:', error);
-      }
     });
   
     infoContainer.appendChild(title);
@@ -74,43 +75,49 @@ export function createVideoElement(video: Video): HTMLElement {
     videoContainer.appendChild(infoContainer);
   
     playButton.addEventListener('click', () => {
-      const videoId = video.id.videoId;
-  
-      const iframeContainer = document.createElement('div');
-      iframeContainer.className = 'iframeContainer';
-  
-      const iframe = document.createElement('iframe');
-      iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-      iframe.allowFullscreen = true;
-  
-      iframeContainer.appendChild(iframe);
-
-    //Caso queira que o vídeo abra em uma página em branco, a função abaixo limpa o conteúdo para exibir somente o vídeo.
-
-    //   if (window.innerWidth < 1023) {
-    //     const searchResult = document.querySelector('.searchResult') as HTMLElement;
-    //     searchResult.innerHTML = '';
-    //   }
+        const videoId = video.id.videoId;
     
-      const videoPlayer = document.querySelector('.videoPlayer') as HTMLElement;
-      videoPlayer.innerHTML = '';
-      videoPlayer.appendChild(iframeContainer);
+        const iframeContainer = document.createElement('div');
+        iframeContainer.className = 'iframeContainer';
+    
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        iframe.allowFullscreen = true;
+    
+        iframeContainer.appendChild(iframe);
+    
+        // Caso queira que o vídeo abra em uma página em branco, a função abaixo limpa o conteúdo para exibir somente o vídeo.
+        // if (window.innerWidth < 1023) {
+        //     const searchResult = document.querySelector('.searchResult') as HTMLElement;
+        //     searchResult.innerHTML = '';
+        // }
+    
+        const videoPlayer = document.querySelector('.videoPlayer') as HTMLElement;
+        videoPlayer.innerHTML = '';
+        videoPlayer.appendChild(iframeContainer);
     });
   
     playButton.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        playButton.click();
-      }
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            playButton.click();
+        }
     });
   
     starFavorite.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        starFavorite.click();
-      }
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            starFavorite.click();
+        }
     });
   
+    (async () => {
+        const favoriteVideos = await fetchFavoriteVideos();
+        const isFavoriteVideo = favoriteVideos.some(favorite => favorite.videoId === video.id.videoId);
+        isVideoFavorite = isFavoriteVideo;
+        starFavorite.src = isVideoFavorite ? 'images/filledStar.svg' : 'images/star.svg';
+    })();
+  
     return videoContainer;
-  }
+}
