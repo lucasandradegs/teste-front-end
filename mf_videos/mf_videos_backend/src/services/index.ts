@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { YouTubeVideo } from '../utils/interface'
 
-const API_KEY = 'AIzaSyAa7yBngxdchVxPgpTKNJEM-ZNvLhH4YL0'
+const API_KEY = 'AIzaSyATGybaFRv421nL6xmlEhG495SkVL8y7-E'
 const BASE_URL = 'https://www.googleapis.com/youtube/v3/search'
 
 export const searchVideos = async (query: string): Promise<YouTubeVideo[]> => {
