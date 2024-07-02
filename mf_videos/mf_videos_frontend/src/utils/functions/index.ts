@@ -1,5 +1,5 @@
 import { createVideoElement } from "../../components/VideoSearchResult";
-import { FavoritesVideos } from "../interfaces";
+import { FavoritesVideos, Video } from "../interfaces";
 import { getCookie, saveToCookie } from "../saveOnCookies";
 
 let isLightMode = true;
@@ -157,7 +157,7 @@ export async function removeFavorite(videoId: string) {
 }
 
 // Função para buscar vídeos
-export async function fetchVideos(query: string): Promise<any[]> {
+export async function fetchVideos(query: string): Promise<Video[]> {
     const response = await fetch(`http://localhost:3000/api/youtube/search?q=${query}`);
     if (!response.ok) {
         throw new Error('Failed to fetch videos');
@@ -167,8 +167,7 @@ export async function fetchVideos(query: string): Promise<any[]> {
 }
 
 // Função para renderizar vídeos
-export function renderVideos(videos: any[]): void {
-    console.log('Rendering videos:', videos);
+export function renderVideos(videos: Video[]): void {
 
     const searchResult = document.querySelector('.searchResult') as HTMLElement;
     searchResult.innerHTML = '';

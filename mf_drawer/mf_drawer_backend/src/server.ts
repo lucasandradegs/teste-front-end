@@ -12,9 +12,7 @@ import { sqliteConnection } from './database/sqlite'
 const app = express()
 
 app.use(express.json())
-
 app.use(cors())
-
 app.use(routes)
 
 sqliteConnection()
@@ -46,6 +44,10 @@ app.use(
 
 const PORT = parseInt(process.env.PORT || '3030', 10)
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`)
-})
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`)
+  })
+}
+
+export default app

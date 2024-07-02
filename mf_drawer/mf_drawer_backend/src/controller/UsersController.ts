@@ -11,6 +11,7 @@ class UsersController {
 
       if (checkIfUserExists.length > 0) {
         console.log(`Usuário ${userName} já está cadastrado no sistema.`)
+        // Como é uma aplicação de teste, está retornando 200 apenas para fins de testes.
         return res
           .status(200)
           .json(`Usuário ${userName} já está cadastrado no sistema.`)

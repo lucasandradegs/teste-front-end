@@ -27,6 +27,8 @@
     "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
+    "@cypress/webpack-preprocessor": "^6.0.2",
+    "cypress": "^13.13.0",
     "js-cookie": "^3.0.5"
   }
 }

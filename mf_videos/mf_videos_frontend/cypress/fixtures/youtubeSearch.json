@@ -1,0 +1,30 @@
+{
+  "items": [
+    {
+      "id": {
+        "videoId": "testVideoId1"
+      },
+      "snippet": {
+        "title": "Rocketseat Video 1",
+        "thumbnails": {
+          "default": {
+            "url": "http://example.com/thumbnail1.jpg"
+          }
+        }
+      }
+    },
+    {
+      "id": {
+        "videoId": "testVideoId2"
+      },
+      "snippet": {
+        "title": "Rocketseat Video 2",
+        "thumbnails": {
+          "default": {
+            "url": "http://example.com/thumbnail2.jpg"
+          }
+        }
+      }
+    }
+  ]
+}
