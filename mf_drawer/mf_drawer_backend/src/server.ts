@@ -4,13 +4,16 @@ import express, {
   Request,
   Response,
 } from 'express'
+import cors from 'cors'
 import AppError from './utils/AppError'
-import routes from './routes'
+import routes from './routes/users.routes'
 import { sqliteConnection } from './database/sqlite'
 
 const app = express()
 
 app.use(express.json())
+
+app.use(cors())
 
 app.use(routes)
 
@@ -41,7 +44,8 @@ app.use(
   },
 )
 
-const PORT = parseInt(process.env.PORT || '3001', 10)
-app.listen(PORT, '0.0.0.0', () =>
-  console.log(`Server is running on PORT ${PORT}`),
-)
+const PORT = parseInt(process.env.PORT || '3030', 10)
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`)
+})

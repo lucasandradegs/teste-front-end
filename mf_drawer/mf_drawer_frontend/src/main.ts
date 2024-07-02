@@ -74,6 +74,8 @@ function updateFavoritesCount(count: number) {
   favoritesLinkMobile.textContent = `Favoritos (${count})`;
 }
 
+let isUserRegistered = false;
+
 document.addEventListener('DOMContentLoaded', async () => {
   const count = await fetchFavoritesCount();
   updateFavoritesCount(count);
@@ -84,11 +86,32 @@ document.addEventListener('DOMContentLoaded', async () => {
       updateFavoritesCount(newCount);
     }
   });
-});
 
-document.addEventListener('DOMContentLoaded', async () => {
-  const count = await fetchFavoritesCount();
-  updateFavoritesCount(count);
+  if (!isUserRegistered) {
+    try {
+      const response = await fetch('http://localhost:3030/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userName: 'testuser',
+          password: 'testpassword',
+        }),
+      });
+
+      if (response.ok) {
+        console.log('Usuário registrado com sucesso!');
+        isUserRegistered = true;
+      } else {
+        console.log('Você já está registrado!');
+        isUserRegistered = true;
+      }
+    } catch (error) {
+      console.log('Você já está registrado!');
+      isUserRegistered = true;
+    }
+  }
 });
 
 document.addEventListener('DOMContentLoaded', initApp);

@@ -4,12 +4,14 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN rm -rf node_modules && npm install
+RUN npm install
+
+COPY src/database/knex/migrations /app/dist/database/knex/migrations
 
 COPY . .
 
 RUN npm run build
 
-EXPOSE 3001
+RUN npm run migrate
 
-CMD ["node", "dist/server.js"]
+CMD ["npm", "start"]

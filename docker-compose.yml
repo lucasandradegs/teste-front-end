@@ -3,7 +3,9 @@ services:
   mf_drawer_backend:
     build: ./mf_drawer/mf_drawer_backend
     ports:
-      - "3001:3001"
+      - "30303:3030"
+    volumes:
+      - drawer_db_data:/app/dist/database
 
   mf_drawer_frontend:
     build: ./mf_drawer/mf_drawer_frontend
@@ -37,3 +39,4 @@ services:
 
 volumes:
   videos_db_data:
+  drawer_db_data:
