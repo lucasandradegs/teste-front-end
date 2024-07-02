@@ -17,7 +17,9 @@ services:
   mf_videos_backend:
     build: ./mf_videos/mf_videos_backend
     ports:
-      - "3000:3000"    
+      - "3000:3000"
+    volumes:
+      - videos_db_data:/app/dist/database
 
   mf_videos_frontend:
     build: ./mf_videos/mf_videos_frontend
@@ -32,3 +34,6 @@ services:
     build: .
     ports:
       - "80:80"
+
+volumes:
+  videos_db_data:

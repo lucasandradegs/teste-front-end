@@ -2,7 +2,6 @@ import { getCookie, saveToCookie } from "../saveOnCookies";
 
 let isLightMode = true;
 
-
 // Funções para alterar o tema da página
 export function toggleTheme() {
     const root = document.documentElement;
@@ -57,7 +56,7 @@ export function toggleSideMenu(): void {
         body.style.overflow = '';
     }
 }
-
+// Ajustar o layout da aplicação sempre que atingir o width para responsividade
 function applyLayoutResize(width: number) {
     const body = document.body;
     const searchResult = document.getElementById('searchResult');
@@ -75,6 +74,7 @@ function applyLayoutResize(width: number) {
     }
 }
 
+// Aplicar o tema para a página
 function applyThemeChange(theme: string) {
     const root = document.documentElement;
     if (theme === 'dark') {

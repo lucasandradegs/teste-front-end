@@ -3,13 +3,18 @@ FROM node:14
 WORKDIR /app
 
 COPY package*.json ./
+RUN npm install
 
-RUN rm -rf node_modules && npm install
+
+COPY src/database/knex/migrations /app/dist/database/knex/migrations
+
 
 COPY . .
 
+# Compile TypeScript
 RUN npm run build
 
-EXPOSE 3000
+# Execute as migrations
+RUN npm run migrate
 
-CMD ["node", "dist/server.js"]
+CMD ["npm", "start"]

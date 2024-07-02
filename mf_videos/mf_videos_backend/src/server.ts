@@ -2,12 +2,18 @@ import express from 'express';
 import cors from 'cors';
 import youtubeRoutes from './routes/youtube.routes';
 import knex from './database/knex';
+import { sqliteConnection } from './database/sqlite'
 
 const app = express();
+
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
+
 app.use(express.json());
+
+sqliteConnection()
+
 app.use('/api/youtube', youtubeRoutes);
 
 app.post('/api/favorites', async (req, res) => {

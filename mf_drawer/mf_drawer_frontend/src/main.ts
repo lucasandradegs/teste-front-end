@@ -69,7 +69,9 @@ async function fetchFavoritesCount(): Promise<number> {
 
 function updateFavoritesCount(count: number) {
   const favoritesLink = document.querySelector('#linkToFavorites') as HTMLElement;
+  const favoritesLinkMobile = document.querySelector('#linkToFavoritesMobile') as HTMLElement;
   favoritesLink.textContent = `Favoritos (${count})`;
+  favoritesLinkMobile.textContent = `Favoritos (${count})`;
 }
 
 document.addEventListener('DOMContentLoaded', async () => {

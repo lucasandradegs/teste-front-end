@@ -97,11 +97,11 @@ window.addEventListener('message', (event) => {
     const mfVideos = document.getElementById('mf_videos');
     if (mfVideos) {
       if (target === 'videos') {
-        mfVideos.src = "http://localhost:3002/index.html";
-        // mfVideos.src = "http://localhost:8082/index.html";
+        // mfVideos.src = "http://localhost:3002/index.html";
+        mfVideos.src = "http://localhost:8082/index.html";
       } else if (target === 'favorites') {
-        mfVideos.src = "http://localhost:3002/favorites.html";
-        // mfVideos.src = "http://localhost:8082/favorites.html";
+        // mfVideos.src = "http://localhost:3002/favorites.html";
+        mfVideos.src = "http://localhost:8082/favorites.html";
       }
     }
   }

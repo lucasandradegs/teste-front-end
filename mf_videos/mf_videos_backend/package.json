@@ -4,10 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "migrate": "knex migrate:latest --knexfile ./src/utils/knexfile.ts"
+    "dev": "ts-node-dev src/server.ts",
+    "migrate": "knex migrate:latest --knexfile dist/utils/knexfile.js",
+    "migratedev": "knex migrate:latest --knexfile src/utils/knexfile.ts"
   },
   "keywords": [],
   "author": "",

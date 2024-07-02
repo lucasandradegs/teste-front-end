@@ -6,30 +6,45 @@ import { createSideMenu } from './components/SideMenu';
 function createVideoElement(video: any): HTMLElement {
   const videoContainer = document.createElement('div');
   videoContainer.className = 'videoContainer';
+  videoContainer.setAttribute('role', 'group');
+  videoContainer.setAttribute('aria-label', video.snippet.title);
+  videoContainer.tabIndex = 0;
 
   const playButton = document.createElement('img');
   playButton.src = 'images/playVideo.svg';
   playButton.alt = 'Icone para dar play no vídeo';
   playButton.className = 'videoPlayButton';
+  playButton.setAttribute('role', 'button');
+  playButton.tabIndex = 0;
 
   const thumbnail = document.createElement('img');
   thumbnail.src = video.snippet.thumbnails.default.url;
-  thumbnail.alt = 'Imagem de Thumbnail do vídeo';
+  thumbnail.alt = `Thumbnail do vídeo ${video.snippet.title}`;
+  thumbnail.tabIndex = 0;
 
   const title = document.createElement('h4');
   title.textContent = video.snippet.title;
+  title.tabIndex = 0;
 
   const infoContainer = document.createElement('div');
   infoContainer.className = 'infoContainer';
+  infoContainer.setAttribute('role', 'group');
+  infoContainer.tabIndex = 0;
 
-  const startFavorite = document.createElement('img');
-  startFavorite.src = 'images/star.svg';
-  startFavorite.alt = 'Imagem de uma estrela representando vídeo marcado como favorito';
+  const starFavorite = document.createElement('img');
+  starFavorite.src = 'images/star.svg';
+  starFavorite.alt = 'Adicionar aos favoritos';
+  starFavorite.className = 'starFavorite';
+  starFavorite.setAttribute('role', 'button');
+  starFavorite.tabIndex = 0;
 
   let isVideoFavorite = false;
-  startFavorite.addEventListener('click', async (event) => {
+  starFavorite.addEventListener('click', async (event) => {
+    console.log('Star clicked:', video);
+
     event.preventDefault();
-  
+    event.stopPropagation();
+
     const videoData = {
       id: { videoId: video.id.videoId },
       snippet: {
@@ -39,16 +54,18 @@ function createVideoElement(video: any): HTMLElement {
         }
       }
     };
-  
+
     try {
       if (isVideoFavorite) {
-        startFavorite.src = 'images/star.svg';
+        console.log('Removing favorite:', video.id.videoId);
+        starFavorite.src = 'images/star.svg';
         await removeFavorite(video.id.videoId);
       } else {
-        startFavorite.src = 'images/filledStar.svg';
+        console.log('Adding favorite:', videoData);
+        starFavorite.src = 'images/filledStar.svg';
         await addFavorite(videoData);
       }
-  
+
       isVideoFavorite = !isVideoFavorite;
     } catch (error) {
       console.error('Error updating favorites:', error);
@@ -56,13 +73,13 @@ function createVideoElement(video: any): HTMLElement {
   });
 
   infoContainer.appendChild(title);
-  infoContainer.appendChild(startFavorite);
+  infoContainer.appendChild(starFavorite);
 
   videoContainer.appendChild(playButton);
   videoContainer.appendChild(thumbnail);
   videoContainer.appendChild(infoContainer);
 
-  thumbnail.addEventListener('click', () => {
+  playButton.addEventListener('click', () => {
     const videoId = video.id.videoId;
 
     const iframeContainer = document.createElement('div');
@@ -80,6 +97,20 @@ function createVideoElement(video: any): HTMLElement {
 
     const videoPlayer = document.querySelector('.videoPlayer') as HTMLElement;
     videoPlayer.appendChild(iframeContainer);
+  });
+
+  playButton.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      playButton.click();
+    }
+  });
+
+  starFavorite.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      starFavorite.click();
+    }
   });
 
   return videoContainer;
@@ -108,18 +139,29 @@ async function addFavorite(video: any) {
     if (!response.ok) {
       throw new Error('Failed to add video to favorites');
     }
+
+    console.log('Favorite added successfully:', video);
   } catch (error) {
     console.error('Error adding video to favorites:', error);
   }
 }
 
 async function removeFavorite(videoId: string) {
-  await fetch(`http://localhost:3000/api/favorites/${videoId}`, {
-    method: 'DELETE'
-  });
-  window.parent.postMessage({ type: 'UPDATE_FAVORITES_COUNT' }, '*');
-}
+  try {
+    const response = await fetch(`http://localhost:3000/api/favorites/${videoId}`, {
+      method: 'DELETE'
+    });
 
+    if (!response.ok) {
+      throw new Error('Failed to remove video from favorites');
+    }
+
+    console.log('Favorite removed successfully:', videoId);
+    window.parent.postMessage({ type: 'UPDATE_FAVORITES_COUNT' }, '*');
+  } catch (error) {
+    console.error('Error removing video from favorites:', error);
+  }
+}
 
 // Função para buscar vídeos
 async function fetchVideos(query: string): Promise<any[]> {
@@ -128,11 +170,14 @@ async function fetchVideos(query: string): Promise<any[]> {
     throw new Error('Failed to fetch videos');
   }
   const videos = await response.json();
+  console.log('Videos fetched:', videos);
   return videos;
 }
 
 // Função para renderizar vídeos
 function renderVideos(videos: any[]): void {
+  console.log('Rendering videos:', videos);
+
   const searchResult = document.querySelector('.searchResult') as HTMLElement;
   searchResult.innerHTML = '';
 
@@ -142,7 +187,6 @@ function renderVideos(videos: any[]): void {
   });
 }
 
-// Inicializar a aplicação
 function initApp() {
   const root = document.getElementById('headerMobile');
   if (root) {
@@ -166,10 +210,13 @@ function initApp() {
   const searchForm = document.querySelector('.searchForm') as HTMLFormElement;
   if (searchForm) {
     searchForm.addEventListener('submit', async (event) => {
+      console.log('Search form submitted');
+
       event.preventDefault();
       const input = searchForm.querySelector('input[type="search"]') as HTMLInputElement;
       const query = input.value;
       if (query) {
+        localStorage.setItem('lastSearchQuery', query);
         try {
           const videos = await fetchVideos(query);
           renderVideos(videos);
@@ -179,9 +226,18 @@ function initApp() {
       }
     });
   }
+
+  const lastSearchQuery = localStorage.getItem('lastSearchQuery');
+  if (lastSearchQuery) {
+    const input = searchForm.querySelector('input[type="search"]') as HTMLInputElement;
+    input.value = lastSearchQuery;
+    fetchVideos(lastSearchQuery).then(renderVideos).catch(console.error);
+  }
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+  console.log('DOMContentLoaded event fired');
+
   const favoritesContainer = document.getElementById('favoritesContainer');
 
   if (!favoritesContainer) return;
@@ -189,8 +245,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
     const response = await fetch('http://localhost:3000/api/favorites');
     const favoriteVideos = await response.json();
+    console.log('Favorite videos fetched:', favoriteVideos);
 
     favoriteVideos.forEach((video: any) => {
+      console.log('Video from DB:', video);
       const videoElement = createFavSection(video);
       favoritesContainer.appendChild(videoElement);
     });
@@ -200,18 +258,102 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 function createFavSection(video: any): HTMLElement {
+  console.log('Creating favorite video section:', video);
+
   const videoContainer = document.createElement('div');
   videoContainer.className = 'videoContainer';
+  videoContainer.setAttribute('role', 'group');
+  videoContainer.setAttribute('aria-label', video.title);
+  videoContainer.tabIndex = 0;
+
+  const playButton = document.createElement('img');
+  playButton.src = 'images/playVideo.svg';
+  playButton.alt = 'Icone para dar play no vídeo';
+  playButton.className = 'videoPlayButton';
+  playButton.setAttribute('role', 'button');
+  playButton.tabIndex = 0;
 
   const thumbnail = document.createElement('img');
   thumbnail.src = video.thumbnail;
-  thumbnail.alt = 'Imagem de Thumbnail do vídeo';
+  thumbnail.alt = `Thumbnail do vídeo ${video.title}`;
+  thumbnail.tabIndex = 0;
+
+  const infoContainer = document.createElement('div');
+  infoContainer.className = 'infoContainer';
+  infoContainer.setAttribute('role', 'group');
+  infoContainer.tabIndex = 0;
 
   const title = document.createElement('h4');
   title.textContent = video.title;
+  title.tabIndex = 0;
 
+  const starFavorite = document.createElement('img');
+  starFavorite.src = 'images/filledStar.svg';
+  starFavorite.alt = 'Remover dos favoritos';
+  starFavorite.className = 'starFavorite';
+  starFavorite.setAttribute('role', 'button');
+  starFavorite.tabIndex = 0;
+
+  starFavorite.addEventListener('click', async () => {
+    const videoId = video.videoId;
+
+    if (!videoId) {
+      console.error('Video ID is null or undefined:', video);
+      return;
+    }
+
+    try {
+      await removeFavorite(videoId);
+      videoContainer.remove();
+    } catch (error) {
+      console.error('Error removing video from favorites:', error);
+    }
+  });
+
+  videoContainer.appendChild(playButton);
   videoContainer.appendChild(thumbnail);
-  videoContainer.appendChild(title);
+
+  infoContainer.appendChild(title);
+  infoContainer.appendChild(starFavorite);
+
+  videoContainer.appendChild(infoContainer);
+
+  playButton.addEventListener('click', () => {
+    const videoId = video.videoId;
+
+    if (!videoId) {
+      console.error('Video ID is null or undefined:', video);
+      return;
+    }
+
+    const iframeContainer = document.createElement('div');
+    iframeContainer.className = 'iframe-container';
+
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+    iframe.allowFullscreen = true;
+
+    iframeContainer.appendChild(iframe);
+
+    const videoPlayer = document.querySelector('.videoPlayer') as HTMLElement;
+    videoPlayer.innerHTML = '';
+    videoPlayer.appendChild(iframeContainer);
+  });
+
+  playButton.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      playButton.click();
+    }
+  });
+
+  starFavorite.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      starFavorite.click();
+    }
+  });
 
   return videoContainer;
 }
