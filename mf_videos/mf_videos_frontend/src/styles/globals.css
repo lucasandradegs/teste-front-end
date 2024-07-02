@@ -11,7 +11,6 @@
   --input-color: #F6F6F7;
 }
 
-
 a:focus-visible,
 button:focus-visible,
 select:focus-visible,
@@ -19,7 +18,6 @@ textarea:focus-visible {
   outline: 2px solid #387ac0;
   outline-offset: 2px;
 }
-
 
 body {
   padding: 3rem 2.4rem;
@@ -65,20 +63,23 @@ a:hover {
   text-align: center;
 
   .searchForm {
-    box-shadow: 19px 14px 32px rgba(0, 0, 0, .1), 4px 2px 6px rgba(0, 0, 0, .08);
     display: flex;
-    width: 100%;
     align-items: center;
-    gap: 3px;
-    border-radius: 999999px;
-    background-color: var(--input-color);
+    
+    width: 100%;
     padding-left: 2rem;
     padding-right: 2rem;
     padding-top: 1.2rem;
     padding-bottom: 1.2rem;
+    gap: 3px;
+    
+    box-shadow: 19px 14px 32px rgba(0, 0, 0, .1), 4px 2px 6px rgba(0, 0, 0, .08);
+    border-radius: 999999px;
+    background-color: var(--input-color);
 
     >input {
       flex: 1 1 0%;
+
       background-color: transparent;
       outline: 2px solid transparent;
       outline-offset: 2px;
@@ -97,7 +98,6 @@ a:hover {
 
     margin-right: auto;
     margin-left: auto;
-
     margin-bottom: 4rem;
 
     >img {
@@ -114,14 +114,17 @@ a:hover {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      > img {
-        cursor: pointer;
+
+      >img {
         width: 3rem;
+        
+        cursor: pointer;
       }
     }
 
     h4 {
       width: 23.5rem;
+
       text-align: start;
       font-size: 1.4rem;
     }
@@ -164,16 +167,17 @@ body.responsiveResult {
   }
 }
 
-.iframe-container {
+.iframeContainer {
   position: relative;
   width: 100%;
-  padding-bottom: 56.25%;
   height: 0;
-  overflow: hidden;
+  padding-bottom: 56.25%;
   margin-top: 4rem;
+  
+  overflow: hidden;
 }
 
-.iframe-container iframe {
+.iframeContainer iframe {
   position: absolute;
   top: 0;
   left: 0;
@@ -187,17 +191,17 @@ body.responsiveResult {
   margin-top: 4rem;
 
   .videoContainer {
-    width: 30rem;
     position: relative;
+    width: 30rem;
 
     margin-right: auto;
     margin-left: auto;
-
     margin-bottom: 4rem;
 
     >img {
       width: 30rem;
       height: 21rem;
+
       border-radius: 3.5rem;
 
       @media (max-width: 374px) {
@@ -209,14 +213,17 @@ body.responsiveResult {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      > img {
-        cursor: pointer;
+
+      >img {
         width: 3rem;
+        
+        cursor: pointer;
       }
     }
 
     h4 {
       width: 23.5rem;
+      
       text-align: start;
       font-size: 1.4rem;
     }
@@ -241,5 +248,18 @@ body.responsiveResult {
     @media (min-width: 953px) {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
+  }
+}
+
+body#containerFavorites {
+  >h1 {
+    font-size: 2rem;
+    text-align: center;
+  }
+}
+
+body#containerFavorites.responsiveResult {
+  >h1 {
+    text-align: start;
   }
 }

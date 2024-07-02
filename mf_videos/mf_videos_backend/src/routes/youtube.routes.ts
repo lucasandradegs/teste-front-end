@@ -1,8 +1,8 @@
-import { Router } from 'express';
-import { getVideos } from '../controller/YoutubeController';
+import { Router } from 'express'
+import { getVideos } from '../controller/YoutubeController'
 
-const router = Router();
+const router = Router()
 
-router.get('/search', getVideos);
+router.get('/search', getVideos)
 
-export default router;
+export default router
